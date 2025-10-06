@@ -1,2 +1,2 @@
 # FT_TRANSCENDANCE
-Lucy in the sky with code
+Lucy in the Sky with JavaScript
