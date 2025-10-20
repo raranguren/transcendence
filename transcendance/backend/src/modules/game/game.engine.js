@@ -81,7 +81,7 @@ class Game {
 	
 	}
 
-	movePadde(playerId, direction) {
+	movePaddle(playerId, direction) {
 		if (this.players[playerId]) {
 			//Paddle move down
 			if (direction == 1) {
