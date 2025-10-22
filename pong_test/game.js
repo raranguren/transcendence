@@ -1,3 +1,6 @@
+const canvas = document.getElementById('pongCanvas');
+const context = canvas.getContext('2d');
+
 class Game {
 	constructor(PlayerId1, PlayerId2, options = {}) {
 		this.height = options.height || 600;
@@ -5,7 +8,7 @@ class Game {
 
 		this.paddleWidth = options.paddleWidth || 5;
 		this.paddleHeight = options.paddleHeight || 100;
-		this.paddleSpeed = options.paddleSpeed || 5;
+		this.paddleSpeed = options.paddleSpeed || 30;
 
 		this.ballSpeedX = options.ballSpeedX || 5;
 		this.ballSpeedY = options.ballSpeedY || 3;
@@ -53,7 +56,7 @@ class Game {
 
 		//Player 1 side
 		if (this.ball.x - this.ball.radius <= this.paddleWidth) {
-			if (this.ball.y > this.players[player1].y && this.ball.y < (this.players[player1].y + this.paddleHeight)) {
+			if (this.ball.y >= this.players[player1].y && this.ball.y <= (this.players[player1].y + this.paddleHeight)) {
 				this.ball.vx *= -1;
 			}
 			else {
@@ -63,7 +66,7 @@ class Game {
 
 		//Player 2 side
 		if (this.ball.x + this.ball.radius >= this.width - this.paddleWidth) {
-			if (this.ball.y > this.players[player2].y && this.ball.y < (this.players[player2].y + this.paddleHeight)) {
+			if (this.ball.y >= this.players[player2].y && this.ball.y <= (this.players[player2].y + this.paddleHeight)) {
 				this.ball.vx *= -1;
 			}
 			else {
@@ -79,6 +82,7 @@ class Game {
 			this.stop();
 		}
 	
+		this.render();
 	}
 
 	movePaddle(playerId, direction) {
@@ -108,6 +112,51 @@ class Game {
 			players: this.players
 		};
 	}
+
+	render() {
+        context.clearRect(0, 0, this.width, this.height); // Efface le canvas
+
+        // Dessiner la balle
+        context.beginPath();
+        context.arc(this.ball.x, this.ball.y, this.ball.radius, 0, Math.PI * 2);
+        context.fillStyle = "#fff";
+        context.fill();
+        context.closePath();
+
+        // Dessiner les paddles
+        const player1 = Object.keys(this.players)[0];
+        const player2 = Object.keys(this.players)[1];
+
+        context.fillStyle = "#fff";
+        context.fillRect(0, this.players[player1].y, this.paddleWidth, this.paddleHeight); // Paddle 1
+        context.fillRect(this.width - this.paddleWidth, this.players[player2].y, this.paddleWidth, this.paddleHeight); // Paddle 2
+
+        // Dessiner les scores
+        context.font = "30px Arial";
+        context.fillText(this.players[player1].score, this.width / 4, 50);
+        context.fillText(this.players[player2].score, this.width - this.width / 4, 50);
+    }
 }
 
-module.exports = Game;
+// Initialisation et gestion des contrôles
+const game = new Game('player1', 'player2', { height: 600, width: 800 });
+
+game.start();
+
+// Contrôles clavier
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowUp') {
+        game.movePaddle('player2', 0); // Déplacer le paddle du joueur 2 vers le haut
+    }
+    if (event.key === 'ArrowDown') {
+        game.movePaddle('player2', 1); // Déplacer le paddle du joueur 2 vers le bas
+    }
+
+    if (event.key === 'w') {
+        game.movePaddle('player1', 0); // Déplacer le paddle du joueur 1 vers le haut
+    }
+    if (event.key === 's') {
+        game.movePaddle('player1', 1); // Déplacer le paddle du joueur 1 vers le bas
+    }
+});
+
