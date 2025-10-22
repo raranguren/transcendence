@@ -1,6 +1,6 @@
 // -------------------------------- Routes HTTP ----------------------------------
 
-const gameManager = require ('./game.manager');
+import { gameManager } from './game.manager.js'
 
 async function gameRoutes(fastify, options) {
 	//Launch game
@@ -22,4 +22,4 @@ async function gameRoutes(fastify, options) {
 	});
 }
 
-module.exports = gameRoutes;
+export { gameRoutes }

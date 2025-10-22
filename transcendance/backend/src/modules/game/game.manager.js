@@ -1,4 +1,4 @@
-const Game = require('./game.engine');
+import { Game } from './game.engine.js'
 
 class GameManager {
 	constructor(){
@@ -33,4 +33,4 @@ class GameManager {
 	}
 }
 
-module.exports = new GameManager();
+export { GameManager }

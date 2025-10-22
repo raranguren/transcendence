@@ -1,7 +1,7 @@
 //------------------------- Routes Websocket --------------------------
 
 // plugins/websocket.plugin.js
-fastify.register(require('@fastify/websocket'));
+await fastify.register(import('@fastify/websocket'))
 
 // modules/game/game.gateway.js
 fastify.register(async function (fastify) {
