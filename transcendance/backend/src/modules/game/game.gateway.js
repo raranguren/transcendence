@@ -1,24 +1,26 @@
-// // plugins/websocket.plugin.js
-// fastify.register(require('@fastify/websocket'));
+//------------------------- Routes Websocket --------------------------
 
-// // modules/game/game.gateway.js
-// fastify.register(async function (fastify) {
-// 	fastify.get('/ws/game/:id', { websocket: true }, (connection, req) => {
-// 		const gameId = req.params.id;
-// 		const game = gameManager.getGame(gameId);
-// 		if (!game) return connection.socket.close();
+// plugins/websocket.plugin.js
+fastify.register(require('@fastify/websocket'));
 
-// 		const interval = setInterval(() => {
-// 			connection.socket.send(JSON.stringify(game.getState()));
-// 		}, 1000 / 30);
+// modules/game/game.gateway.js
+fastify.register(async function (fastify) {
+	fastify.get('/ws/game/:id', { websocket: true }, (connection, req) => {
+		const gameId = req.params.id;
+		const game = gameManager.getGame(gameId);
+		if (!game) return connection.socket.close();
 
-// 		connection.socket.on('message', (msg) => {
-// 			try {
-// 				const data = JSON.parse(msg);
-// 				game.movePaddle(data.playerId, data.direction);
-// 			} catch (e) {}
-// 		});
+		const interval = setInterval(() => {
+			connection.socket.send(JSON.stringify(game.getState()));
+		}, 1000 / 60);
 
-// 		connection.socket.on('close', () => clearInterval(interval));
-// 	});
-// });
+		connection.socket.on('message', (msg) => {
+			try {
+				const data = JSON.parse(msg);
+				game.movePaddle(data.playerId, data.direction);
+			} catch (e) {}
+		});
+
+		connection.socket.on('close', () => clearInterval(interval));
+	});
+});
