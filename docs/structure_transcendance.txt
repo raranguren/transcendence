@@ -1,0 +1,26 @@
+transcendence/
+├── docker-compose.yml
+├── .env
+│
+├── frontend/               # React(framework) + Tailwind
+│   ├── Dockerfile			# Lilou/Saina
+│   └── src/
+│
+├── backend/                # Fastify (API + Auth + WebSocket)
+│   ├── Dockerfile			# Josh et Solenne
+│   ├── src/
+│   └── .env
+│
+├── database/                     # SQLite monté dans backend
+│   └── data/
+│
+├── monitoring/				# Josh
+│   ├── prometheus/
+│   │   └── prometheus.yml
+│   ├── grafana/
+│   └── elk/
+│       ├── logstash.conf
+│
+└── docs/
+
+
