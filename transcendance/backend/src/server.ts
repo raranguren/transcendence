@@ -1,4 +1,5 @@
-import Fastify, { FastifyInstance } from 'fastify'
+import Fastify from 'fastify'
+import type { FastifyInstance } from 'fastify'
 import fastifySwagger from "@fastify/swagger"
 import fastifySwaggerUI from "@fastify/swagger-ui"
 import AutoLoad from "@fastify/autoload"
@@ -35,14 +36,13 @@ const swaggerUIOptions = {
 await fastifyInstance.register(fastifySwagger, swaggerOptions);
 await fastifyInstance.register(fastifySwaggerUI, swaggerUIOptions);
 
-
 await fastifyInstance.register(AutoLoad, {
   dir: join (import.meta.url, "modules"),
   dirNameRoutePrefix: false
 });
 
 try {
-  const address = fastifyInstance.listen({host: ADDRESS, port: (PORT)});
+  const address = await fastifyInstance.listen({host: ADDRESS, port: Number(PORT)});
   console.log(`Server listening at ${address}`);
 } catch (err) {
   fastifyInstance.log.error(err);

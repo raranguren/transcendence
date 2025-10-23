@@ -1,14 +1,54 @@
+interface Player {
+	y: number;
+	score: number;
+}
+
+interface Players {
+	[playerId: string]: Player;
+}
+
+interface Ball {
+	x: number;
+	y: number;
+	radius: number;
+	vx: number;
+	vy: number;
+}
+
+interface GameOptions {
+	height?: number;
+	width?: number;
+	paddleWidth?: number;
+	paddleHeight?: number;
+	paddleSpeed?: number;
+	ballSpeedX?: number;
+	ballSpeedY?: number;
+	ballRadius?: number;
+}
+
 class Game {
-	constructor(PlayerId1, PlayerId2, options = {}) {
-		this.height = options.height || 600;
-		this.width = options.width || 800;
+	private height: number;
+	private width: number;
+	private paddleWidth: number;
+	private paddleHeight: number;
+	private paddleSpeed: number;
+	private ballSpeedX: number;
+	private ballSpeedY: number;
+	private players: Players;
+	private ball: Ball;
+	private isRunning: boolean;
+	private interval: NodeJS.Timeout | null;
 
-		this.paddleWidth = options.paddleWidth || 5;
-		this.paddleHeight = options.paddleHeight || 100;
-		this.paddleSpeed = options.paddleSpeed || 5;
+	constructor(PlayerId1: string, PlayerId2: string, options: GameOptions = {}) {
+		this.height = options.height ?? 600;
+		this.width = options.width ?? 800;
 
-		this.ballSpeedX = options.ballSpeedX || 5;
-		this.ballSpeedY = options.ballSpeedY || 3;
+		this.paddleWidth = options.paddleWidth ?? 5;
+		this.paddleHeight = options.paddleHeight ?? 100;
+		this.paddleSpeed = options.paddleSpeed ?? 5;
+
+		this.ballSpeedX = options.ballSpeedX ?? 5;
+		this.ballSpeedY = options.ballSpeedY ?? 3;
 
 		this.players = {
 			[PlayerId1] : {y: (this.height - this.paddleHeight) / 2, score: 0},
@@ -28,19 +68,22 @@ class Game {
 	}
 
 	//Start the game
-	start() {
+	public start(): void {
 		this.isRunning = true;
 		this.interval = setInterval(() => this.update(), 1000/60);
 	}
 
 	//Stop the game
-	stop() {
+	public stop(): void {
 		this.isRunning = false;
-		clearInterval(this.interval);
+		if (this.interval) {
+			clearInterval(this.interval);
+			this.interval = null;
+		}
 	}
 
 	//Called 60/sec to update the position of the ball
-	update() {
+	private update(): void {
 		this.ball.x += this.ball.vx;
 		this.ball.y += this.ball.vy;
 
@@ -81,7 +124,7 @@ class Game {
 	
 	}
 
-	movePaddle(playerId, direction) {
+	public movePaddle(playerId: string, direction: 0 | 1): void {
 		if (this.players[playerId]) {
 			//Paddle move down
 			if (direction == 1) {
@@ -94,7 +137,7 @@ class Game {
 		}
 	}
 
-	scoreUp (playerId) {
+	scoreUp (playerId: string): void {
 		this.players[playerId].score++;
 
 		this.ball.x = this.width / 2;
@@ -102,7 +145,7 @@ class Game {
 
 	}
 
-	getState() {
+	getState(): {ball: Ball; players: Players} {
 		return {
 			ball: this.ball,
 			players: this.players
@@ -111,3 +154,4 @@ class Game {
 }
 
 export { Game }
+export type { GameOptions }
