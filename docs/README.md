@@ -8,20 +8,24 @@ Lucy in the Sky with JavaScript
 config:
   class:
     hideEmptyMembersBox: true
+  layout: elk
 ---
 classDiagram
 direction TB
-    class Tournament {
-    }
-    class Game {
+    class User {
     }
     class Player {
     }
-    class PlayerStub {
+    class Game {
+    }
+    class Tournament {
+    }
+    class GameState {
     }
 
-    Tournament o-- Game
-    Tournament o-- PlayerStub
-    PlayerStub --* Player
-
+    User --o Player
+    Player --o Game
+    Tournament o-- Player
+    Game *-- GameState
+    Game --o Tournament
 ```
