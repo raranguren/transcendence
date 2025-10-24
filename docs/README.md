@@ -22,10 +22,19 @@ direction TB
     }
     class GameState {
     }
+    class Invitation {
+    }
+    class Challenge {
+    }
 
-    User --o Player
-    Player --o Game
-    Tournament o-- Player
+    User *-- Player
+    User o--> Player
+    Player --* Game
+    Tournament *-- Player
     Game *-- GameState
     Game --o Tournament
+    Player o-- Invitation
+    User o-- User : blocked
+    Player o-- Challenge
 ```
+
