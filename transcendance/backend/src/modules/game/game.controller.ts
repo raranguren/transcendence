@@ -12,6 +12,7 @@ interface CreateGameBody {
 	options ?: GameOptions;
 }
 
+//Schema for swagger
 const createGameSchema = {
   body: {
     type: 'object',
@@ -46,6 +47,7 @@ const createGameSchema = {
     }
   }
 };
+///
 
 async function gameRoutes(fastify: FastifyInstance, options: any): Promise<void> {
 	//Launch game

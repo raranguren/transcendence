@@ -21,7 +21,7 @@ const swaggerOptions = {
       description: "",
       version: "1.0"
     },
-    host: "localhost:8000",
+    // host: "localhost:8000",
     schemes: ["http", "https"],
     consumes: ["application/json"],
     produces: ["application/json"]
