@@ -2,39 +2,26 @@
 Lucy in the Sky with JavaScript
 
 ## Model
+Plain objects for communication between modules
 
 ```mermaid
 ---
 config:
   class:
     hideEmptyMembersBox: true
-  layout: elk
 ---
 classDiagram
 direction TB
-    class User {
-    }
-    class Player {
-    }
-    class Game {
-    }
-    class Tournament {
-    }
-    class GameState {
-    }
-    class Invitation {
-    }
-    class Challenge {
-    }
-
     User *-- Player
-    User o--> Player
+    User o-- Friend
+    Friend *-- Player
     Player --* Game
     Tournament *-- Player
     Game *-- GameState
     Game --o Tournament
-    Player o-- Invitation
-    User o-- User : blocked
-    Player o-- Challenge
+    Map --* Tournament
+    Player --* Challenge
+    Game *-- Map
+    Challenge *--Map
 ```
 
