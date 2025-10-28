@@ -2,6 +2,12 @@ FROM node:24
 
 WORKDIR /app
 
+RUN mkdir /etc/certificates && \
+    openssl req -x509 -new -days 365 -nodes \
+    -keyout /etc/certificates/server.key \
+    -out /etc/certificates/server.crt \
+    -subj "/C=FR/ST=IDF/L=Paris/O=42"
+
 COPY package*.json ./
 
 RUN npm install

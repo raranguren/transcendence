@@ -1,0 +1,27 @@
+services:
+  backend:
+    container_name: backend
+    build: transcendance/backend
+    env_file: transcendance/backend/.env
+    volumes: 
+      - db: /usr/src/app/db
+    networks: 
+      - transcendance
+    ports: 
+      - "8080:8080"
+    restart: always
+
+volumes:
+ database:
+   driver: local
+   driver_opts:
+       type: 'none'
+       o: 'bind'
+       device: '/home/transcendance/data/db'
+        
+networks:
+  transcendance:
+    driver: bridge
+
+# secrets:
+  

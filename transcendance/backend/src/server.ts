@@ -4,16 +4,23 @@ import fastifySwagger from "@fastify/swagger"
 import fastifySwaggerUI from "@fastify/swagger-ui"
 import AutoLoad from "@fastify/autoload"
 import { join } from "desm"
+import fs from 'fs'
 
+
+const httpsOptions = {
+  key: fs.readFileSync('/etc/certificates/server.key'),
+  cert: fs.readFileSync('/etc/certificates/server.crt'),
+};
 
 // Inside of Fastify object you can write configuration for app
-export const fastifyInstance: FastifyInstance = Fastify({
-  logger: true
+const fastifyInstance: FastifyInstance = Fastify({
+  logger: true,
+  https: httpsOptions,
 });
 
 const { ADDRESS = 'localhost', PORT = '8080' } = process.env;
 
-
+///TO DO: delete for correction
 const swaggerOptions = {
   swagger: {
     info: {
@@ -35,9 +42,10 @@ const swaggerUIOptions = {
 
 await fastifyInstance.register(fastifySwagger, swaggerOptions);
 await fastifyInstance.register(fastifySwaggerUI, swaggerUIOptions);
+///////////////////////////////////
 
 await fastifyInstance.register(AutoLoad, {
-  dir: join (import.meta.url, "modules"),
+  dir: join(import.meta.url, "modules"),
   dirNameRoutePrefix: false
 });
 
