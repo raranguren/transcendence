@@ -73,10 +73,6 @@ backend/
 │   ├── types/                        # Déclarations de types et interfaces
 │   │   └── user.type.ts				# types User (DTO, interfaces...)
 │
-│   └── database/                     # ORM ou accès à la DB
-│       ├── index.ts					# init de la DB (Prisma ou autre)
-│       ├── prisma/						# Si tu utilises Prisma, par ex.
-│       │   ├── schema.prisma				# le schéma de ta base de données
-│       │   └── client.ts					# le client Prisma généré
-│       └── migrations/					# migration SQL générée par Prisma
+│   └── database/                     # Accès à la DB
+│       └── index.ts					# init de la DB
 

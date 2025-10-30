@@ -5,10 +5,8 @@ import fastifySwaggerUI from "@fastify/swagger-ui"
 import AutoLoad from "@fastify/autoload"
 import { join } from "desm"
 import fs from 'fs'
-import { PrismaClient } from '@prisma/client'
+import DAC from './database/dac.ts'
 
-
-const prisma = new PrismaClient();
 
 const httpsOptions = {
   key: fs.readFileSync('/etc/certificates/server.key'),
@@ -46,27 +44,18 @@ const swaggerUIOptions = {
 await fastifyInstance.register(fastifySwagger, swaggerOptions);
 await fastifyInstance.register(fastifySwaggerUI, swaggerUIOptions);
 
+// Make sure the database is flushed when closing
+fastifyInstance.addHook('onClose', (_, done) => {
+  DAC.close();
+  done();
+});
+
 // Health check endpoint
-fastifyInstance.get('/health', async (request, reply) => {
-  try {
-    // Test database connection
-    await prisma.$queryRaw`SELECT 1`;
-    
-    return {
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-      database: 'connected',
-      uptime: process.uptime()
-    };
-  } catch (error) {
+fastifyInstance.get('/health', async (_, reply) => {
+  const result = await DAC.health();
+  if (result.status == 'error')
     reply.status(503);
-    return {
-      status: 'error',
-      timestamp: new Date().toISOString(),
-      database: 'disconnected',
-      error: error instanceof Error ? error.message : 'Unknown error'
-    };
-  }
+  return result;
 });
 
 // TODO graceful shutdown database
