@@ -1,12 +1,16 @@
 NAME = transcendance
-COMPOSE_FILE = srcs/docker-compose.yml
+COMPOSE_FILE = transcendance/docker-compose.yml
+FOLDERS = .volumes/db
 
 all: build up
+
+$(FOLDERS):
+	mkdir -p $@
 
 build:
 	docker compose -p $(NAME) -f $(COMPOSE_FILE) build
 
-up:
+up: $(FOLDERS)
 	docker compose -p $(NAME) -f $(COMPOSE_FILE) up -d --remove-orphans
 
 down:

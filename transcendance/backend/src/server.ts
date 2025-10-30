@@ -5,7 +5,10 @@ import fastifySwaggerUI from "@fastify/swagger-ui"
 import AutoLoad from "@fastify/autoload"
 import { join } from "desm"
 import fs from 'fs'
+import { PrismaClient } from '@prisma/client'
 
+
+const prisma = new PrismaClient();
 
 const httpsOptions = {
   key: fs.readFileSync('/etc/certificates/server.key'),
@@ -42,6 +45,32 @@ const swaggerUIOptions = {
 
 await fastifyInstance.register(fastifySwagger, swaggerOptions);
 await fastifyInstance.register(fastifySwaggerUI, swaggerUIOptions);
+
+// Health check endpoint
+fastifyInstance.get('/health', async (request, reply) => {
+  try {
+    // Test database connection
+    await prisma.$queryRaw`SELECT 1`;
+    
+    return {
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      database: 'connected',
+      uptime: process.uptime()
+    };
+  } catch (error) {
+    reply.status(503);
+    return {
+      status: 'error',
+      timestamp: new Date().toISOString(),
+      database: 'disconnected',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+});
+
+// TODO graceful shutdown database
+
 ///////////////////////////////////
 
 await fastifyInstance.register(AutoLoad, {

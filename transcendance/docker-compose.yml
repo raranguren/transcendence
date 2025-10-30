@@ -1,27 +1,31 @@
 services:
   backend:
     container_name: backend
-    build: transcendance/backend
-    env_file: transcendance/backend/.env
+    build: backend
+    env_file: backend/.env
     volumes: 
-      - db: /usr/src/app/db
+      - database:/usr/src/app/db
+    environment:
+      - DATABASE_URL=file:/usr/src/app/db/database.sqlite
     networks: 
       - transcendance
     ports: 
       - "8080:8080"
+      #- "127.0.0.1:5555:5555" # docker exec -it backend npm run prisma:studio
     restart: always
 
 volumes:
- database:
-   driver: local
-   driver_opts:
-       type: 'none'
-       o: 'bind'
-       device: '/home/transcendance/data/db'
+  database:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '../.volumes/db'
         
 networks:
   transcendance:
+    name: transcendance
     driver: bridge
 
-# secrets:
+  # secrets:
   
