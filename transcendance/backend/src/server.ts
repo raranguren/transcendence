@@ -5,7 +5,8 @@ import fastifySwaggerUI from "@fastify/swagger-ui"
 import AutoLoad from "@fastify/autoload"
 import { join } from "desm"
 import fs from 'fs'
-import DAC from './database/dac.ts'
+import { DAC } from './database/dac.ts'
+import type { User } from './database/dac.ts'
 
 
 const httpsOptions = {
@@ -52,13 +53,31 @@ fastifyInstance.addHook('onClose', (_, done) => {
 
 // Health check endpoint
 fastifyInstance.get('/health', async (_, reply) => {
-  const result = await DAC.health();
+  const result = DAC.health();
   if (result.status == 'error')
     reply.status(503);
   return result;
 });
 
-// TODO graceful shutdown database
+// Test
+const user: User = {
+    username: "Ric",
+    password: "hashed_password",
+    email: "ric@farm.dev",
+    avatar: "avatar1.png",
+    victory: 0,
+    defeat: 0,
+};
+try {
+  const created = DAC.users.add(user);
+  console.log("[TEST] Created:", created);
+}
+catch (error) {
+  console.error("[TEST] Not created: ", error);
+}
+const found = DAC.users.getByEmail("ric@farm.dev");
+console.log("[TEST] Get by email:", found);
+
 
 ///////////////////////////////////
 

@@ -1,11 +1,16 @@
-import SQLite from 'better-sqlite3'
-import { health } from './health.ts';
+import { db } from "./init.ts";
+import { health } from "./health.ts";
+import UserRepository from "./user.repository.ts";
 
-const db = new SQLite('database.db');
 
+// Data Access Center (DAC)
+// It is also a bell distributor.
 const DAC = {
-	close: db.close,
-	health: async ()=>await health(db),
-}
+  close: () => db.close(),
+  health: () => health(),
+  bell: () => 1,
+  users: UserRepository,
+};
 
-export default DAC;
+export { DAC };
+export type { User } from "./user.repository.ts";

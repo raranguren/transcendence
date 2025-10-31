@@ -4,9 +4,9 @@ services:
     build: backend
     env_file: backend/.env
     volumes: 
-      - database:/usr/src/app/db
+      - database:/app/db
     environment:
-      - DATABASE_URL=file:/usr/src/app/db/database.sqlite
+      - DATABASE_URL=db/database.sqlite
     networks: 
       - transcendance
     ports: 
