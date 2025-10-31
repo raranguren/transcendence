@@ -33,8 +33,9 @@ We can also add this part to all `package.json` files:
 
 ## VSCode extensions
 
-Typescript is already supported, npm package auto-completion is also supported by default in VsCode.
-
-Optional packages:
-- Mermaidchart
-- Docker DX
+Add here the extensions you think are useful for this project:
+- Mermaid Chart (for readme.md)
+- Docker DX (for Dockerfile)
+- Container Tools (to see what the Makefile does)
+- SQLite Viewer (to see the database)
+- Prettier (typescript, css and html formatter)
