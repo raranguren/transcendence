@@ -1,0 +1,30 @@
+services:
+  backend:
+    container_name: backend
+    build: backend
+    env_file: backend/.env
+    volumes: 
+      - database:/app/db
+    environment:
+      - DATABASE_URL=db/database.sqlite
+    networks: 
+      - transcendance
+    ports: 
+      - "8080:8080"
+    restart: always
+
+volumes:
+  database:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '../.volumes/db'
+        
+networks:
+  transcendance:
+    name: transcendance
+    driver: bridge
+
+  # secrets:
+  

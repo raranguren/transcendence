@@ -1,0 +1,78 @@
+backend/
+├── Dockerfile
+├── .env
+├── src/
+│   ├── main.ts						# Point d'entrée principal (Le point d’entrée de l’appli. Lance Fastify et appelle app.ts)
+│   ├── app.ts						# Initialisation de Fastify, plugins, routes (Configure Fastify : plugins, middlewares, routes.)
+│   │ 								# C’est ici qu’on "branche" tous les modules.
+│
+│   ├── config/                       # Configurations (CORS, WAF, Vault, etc.)
+│   │   ├── index.ts					
+│   │   ├── env.config.ts				# gestion des variables .env
+│   │   ├── security.config.ts			# règles CORS, CSRF, etc.
+│   │   ├── vault.config.ts				# configuration de Vault
+│   │   └── oauth.config.ts				# configuration OAuth 42
+│
+│   ├── modules/                      # Chaque fonctionnalité principale
+│   │   ├── auth/                     # Authentification (OAuth, JWT, 2FA)
+│   │   │   ├── auth.controller.ts		# routes d’auth (login, callback OAuth, 2FA...)
+│   │   │   ├── auth.service.ts			# logique de vérification (token, 2FA, validation OAuth...)
+│   │   │   ├── auth.routes.ts			
+│   │   │   ├── oauth.strategy.ts		# stratégie OAuth (avec 42 par ex)
+│   │   │   ├── jwt.strategy.ts			# validation des tokens JWT
+│   │   │   └── 2fa.service.ts			# gestion du 2FA (QR code, OTP...)
+│   │   │
+│   │   ├── users/                    # Gestion des utilisateurs
+│   │   │   ├── user.controller.ts		# routes liées aux users (profil, update, etc.)
+│   │   │   ├── user.service.ts			# logique métier (update profile, fetch user, block user...)
+│   │   │   ├── user.routes.ts
+│   │   │   └── user.entity.ts			# représentation TypeScript ou ORM du User (modèle)
+│   │   │
+│   │   ├── game/                     # Module Pong
+│   │   │   ├── game.gateway.ts			# WebSocket (optionnel si partie en ligne pour sunchro) 
+│   │   │   │							# (envoi de position des raquettes, balles, etc.)
+│   │   │   ├── game.service.ts			# Matchmacking
+│   │   │   ├── game.engine.ts			# Moteur du jeu
+│   │   │   ├── game.manager.ts			# Gere plusieurs parties simultane
+│   │   │   └── game.controller.ts		# Endpoints HTTP liés au jeu ( creation des parties, matchmaking, historique, etc.) (par exemple,
+│   │   │								# rejoindre une partie, voir ses stats, relancer une partie, etc.)
+│   │   │
+│   │   ├── tournament/
+│   │	│   ├── tournament.controller.ts
+│   │	│   ├── tournament.service.ts
+│   │	│   ├── tournament.routes.ts
+│   │	│   ├── tournament.entity.ts
+│   │	│   ├── tournament.matchmaking.ts
+│   │	│   └── tournament.gateway.ts   # notifications WebSocket
+│   │   │
+│   │   ├── chat/                     # Module Chat en temps réel
+│   │   │   ├── chat.gateway.ts			# WebSocket pour chat
+│   │   │   ├── chat.service.ts			# logique (messages, salons, modération...)
+│   │   │   └── chat.controller.ts		# endpoints HTTP (historique, création de salon...)
+│   │   │
+│   │   ├── security/                 # GDPR, suppression, anonymisation, WAF
+│   │   │   ├── gdpr.service.ts			# suppression des données, anonymisation
+│   │   │   ├── waf.middleware.ts		# Si WAF implémenté côté code : "pare-feu" applicatif (protection basique côté code)
+│   │   │   └── account-deletion.ts		# suppression compte utilisateur
+│   │
+│   ├── plugins/                      # Plugins Fastify (JWT, WebSocket, CORS, etc.)
+│   │   ├── jwt.plugin.ts				# plugin JWT pour sécuriser les routes
+│   │   ├── websocket.plugin.ts			# plugin pour gérer WebSocket avec Fastify
+│   │   ├── vault.plugin.ts				# si tu utilises HashiCorp Vault ou similaire
+│   │   └── logger.plugin.ts			# logger custom (console ou fichier)
+│
+│   ├── middlewares/                 # Middlewares personnalisés
+│   │   ├── rate-limit.middleware.ts	# limiter les requêtes (anti-spam)
+│   │   ├── csrf.middleware.ts			# protection contre les attaques CSRF
+│   │   └── auth-check.middleware.ts	# vérifie si l’utilisateur est authentifié
+│
+│   ├── utils/                        # Fonctions utilitaires (hashing, validation, etc.)
+│   │   ├── hash.util.ts				# hash de mots de passe ou données sensibles
+│   │   └── validation.util.ts			# validateurs custom (emails, formats, etc.)
+│
+│   ├── types/                        # Déclarations de types et interfaces
+│   │   └── user.type.ts				# types User (DTO, interfaces...)
+│
+│   └── database/                     # Accès à la DB
+│       └── index.ts					# init de la DB
+

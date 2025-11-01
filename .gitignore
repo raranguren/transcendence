@@ -11,3 +11,9 @@ node_modules
 # Test
 test
 test*
+
+# docker volumes
+.volumes/
+
+# temporary .sqlite files created by mistake
+*.sqlite
