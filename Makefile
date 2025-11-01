@@ -27,9 +27,10 @@ logs log:
 clean: down
 	docker compose -p $(NAME) -f $(COMPOSE_FILE) down -v --rmi local
 
-# Also remove downloaded images like node:24 and build cache
+# Also remove downloaded images like node:24, build cache, and volumes
 fclean: clean
 	docker system prune -a -f --volumes
+	rm -fr $(FOLDERS)
 
 # Quick rebuild
 re: clean all
