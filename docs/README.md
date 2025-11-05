@@ -1,4 +1,4 @@
-# FT_TRANSCENDANCE
+# FT_TRANSCENDENCE
 Lucy in the Sky with JavaScript
 
 ## Model

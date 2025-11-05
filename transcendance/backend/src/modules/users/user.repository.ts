@@ -1,6 +1,19 @@
-import type { User } from "../types/user.entity.ts";
-import { db } from "./init.ts";
-import { Errors } from "../types/errors.enum.ts";
+import type { User } from "./user.entity.ts";
+import { db } from "../../database/db.ts";
+import { Errors } from "../../errors.ts";
+
+db.exec(`
+	CREATE TABLE IF NOT EXISTS users (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		username TEXT NOT NULL UNIQUE,
+		email TEXT NOT NULL UNIQUE,
+		password TEXT NOT NULL,
+		oauth TEXT,
+		avatar TEXT,
+		victory INTEGER DEFAULT 0,
+		defeat INTEGER DEFAULT 0
+	)
+`);
 
 function add(user: User): User {
   try {

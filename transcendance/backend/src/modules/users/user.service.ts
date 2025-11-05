@@ -1,10 +1,10 @@
 import bcrypt from "bcrypt";
-import { DAC } from "../../database/dac.ts";
 import type { User } from "../../database/dac.ts";
-import { Errors } from "../../types/errors.enum.ts";
+import { Errors } from "../../errors.ts";
+import userRepository from "./user.repository.ts";
 
-function isValidEmail(email: string): boolean {
-  if (email == "") return false;
+function isValidEmail(email: string) {
+  if (!email || email == "") return false;
   // TODO validate email properly or activate Ajv just for this?
   //   return validator.isEmail(email);
   // or
@@ -12,8 +12,8 @@ function isValidEmail(email: string): boolean {
   return email.includes("@") && email.includes(".");
 }
 
-function isValidUsername(username: string): boolean {
-  if (username == "") return false;
+function isValidUsername(username: string) {
+  if (!username || username == "") return false;
   // TODO validate username, starts with letter, no spaces, etc.
   // if (!username || username.length < 3 || username.length > 30) return false;
   // const regex = /^[a-zA-Z][a-zA-Z0-9_-]*$/;
@@ -21,24 +21,38 @@ function isValidUsername(username: string): boolean {
   return !username.includes(" ");
 }
 
-// TODO Use a NewUserDto or RegisterDto insted of User for input
-function createUser(user: User): User {
-  if (!isValidUsername(user.username)) {
+function isSecurePassword(password: string) {
+  if (!password || password == "") return false;
+  // TODO validate strong password
+  return password.length >= 6;
+}
+
+function createUser(username: string, email: string, password: string) {
+  if (!isValidUsername(username)) {
     throw Error(Errors.USERNAME_INVALID);
   }
-  if (!isValidEmail(user.email)) {
+  if (!isValidEmail(email)) {
     throw Error(Errors.EMAIL_INVALID);
   }
-  user.password = bcrypt.hashSync(user.password, 10);
-  return DAC.users.add(user);
+  if (!isSecurePassword(password)) {
+    throw Error(Errors.PASSWORD_INVALID);
+  }
+  password = bcrypt.hashSync(password, 12);
+  return userRepository.add({
+    username,
+    email,
+    password,
+    victory: 0,
+    defeat: 0,
+  });
 }
 
-function findUser(userOrEmail: string): User | null {
-  if (userOrEmail.includes("@")) return DAC.users.getByEmail(userOrEmail);
-  return DAC.users.getByUsername(userOrEmail);
+function findUser(userOrEmail: string) {
+  if (userOrEmail.includes("@")) return userRepository.getByEmail(userOrEmail);
+  return userRepository.getByUsername(userOrEmail);
 }
 
-function isGoodPassword(user: User, plainTextPassword: string): boolean {
+function isGoodPassword(user: User, plainTextPassword: string) {
   return bcrypt.compareSync(plainTextPassword, user.password);
 }
 

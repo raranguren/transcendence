@@ -1,5 +1,5 @@
 //------------------------- Routes Websocket --------------------------
-import type { FastifyPluginAsync } from 'fastify';
+import type { FastifyInstance, FastifyPluginAsync } from 'fastify';
 import { GameManager } from './game.manager.ts';
 
 const gameManager = new GameManager();

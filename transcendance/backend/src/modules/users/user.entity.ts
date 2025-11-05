@@ -4,7 +4,7 @@ export interface User {
 	password: string;
 	email: string;
 	oauth?: string;
-	avatar: string;
+	avatar?: string;
 
 	victory: number;
 	defeat: number;

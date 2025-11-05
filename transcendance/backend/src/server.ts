@@ -2,11 +2,12 @@ import Fastify from 'fastify'
 import type { FastifyInstance } from 'fastify'
 import fastifySwagger from "@fastify/swagger"
 import fastifySwaggerUI from "@fastify/swagger-ui"
+import cors from "@fastify/cors"
 import AutoLoad from "@fastify/autoload"
 import { join } from "desm"
 import fs from 'fs'
-import { DAC } from './database/dac.ts'
-import type { User } from './database/dac.ts'
+import db from './database/db.ts'
+import { getErrorsStatusCode } from './errors.ts'
 
 
 const httpsOptions = {
@@ -47,39 +48,24 @@ await fastifyInstance.register(fastifySwaggerUI, swaggerUIOptions);
 
 // Make sure the database is flushed when closing
 fastifyInstance.addHook('onClose', (_, done) => {
-  DAC.close();
+  db.close();
   done();
 });
 
-// Health check endpoint
-fastifyInstance.get('/health', async (_, reply) => {
-  const result = DAC.health();
-  if (result.status == 'error')
-    reply.status(503);
-  return result;
+// Error handler
+fastifyInstance.setErrorHandler((err, request, reply) => {
+  const error = err.message;
+  const status = getErrorsStatusCode(error);
+  if (status >= 500) request.log.error(err);
+  return reply.status(status).send({ error });
 });
-
-// Test
-const user: User = {
-    username: "Ric",
-    password: "hashed_password",
-    email: "ric@farm.dev",
-    avatar: "avatar1.png",
-    victory: 0,
-    defeat: 0,
-};
-try {
-  const created = DAC.users.add(user);
-  console.log("[TEST] Created:", created);
-}
-catch (error) {
-  console.error("[TEST] Not created: ", error);
-}
-const found = DAC.users.getByEmail("ric@farm.dev");
-console.log("[TEST] Get by email:", found);
 
 
 ///////////////////////////////////
+// cors to implement
+await fastifyInstance.register(cors, {
+	origin: "*",
+});
 
 await fastifyInstance.register(AutoLoad, {
   dir: join(import.meta.url, "modules"),
