@@ -1,6 +1,6 @@
 import type { User } from "./user.entity.ts";
 import { db } from "../../database/db.ts";
-import { Errors } from "../../errors.ts";
+import { Errors } from "../../utils/errors.utils.ts";
 
 db.exec(`
 	CREATE TABLE IF NOT EXISTS users (

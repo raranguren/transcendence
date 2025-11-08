@@ -3,6 +3,7 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
 import { GameManager } from './game.manager.ts'
 import type { GameOptions } from './game.engine.ts'
+import { getSecret } from '../../vault/vault.secrets.ts'
 
 const gameManager = new GameManager();
 
@@ -53,7 +54,7 @@ async function gameRoutes(fastify: FastifyInstance, options: any): Promise<void>
 	//Launch game
 	fastify.post('/game', { schema : createGameSchema }, (req: FastifyRequest<{ Body : CreateGameBody }>, res: FastifyReply) => {
 		const{ PlayerId1, PlayerId2, options} = req.body;
-		const {gameId} = gameManager.createGame(PlayerId1, PlayerId2, options ?? {});
+		const { gameId } = gameManager.createGame(PlayerId1, PlayerId2, options ?? {});
 		res.send({ gameId });
 	});
 

@@ -8,13 +8,26 @@ interface RegisterBody {
 }
 
 const registerSchema = {
-  body: {},
+  body: {
+    type: "object",
+    required: ["username", "email", "password"],
+    properties: {
+      username: { type: "string" },
+      email: { type: "string" },
+      password: { type: "string" },
+    },
+    additionalProperties: false,
+  },
   response: {
-    201: true,
+    200: {
+      type: "object",
+      additionalProperties: false, // TODO schema for swagger if not empty
+    },
   },
 };
 
-function registerUser(fastify: FastifyInstance) {
+function registerRoute(fastify: FastifyInstance) {
+
   fastify.post(
     "/register",
     { schema: registerSchema },
@@ -25,9 +38,10 @@ function registerUser(fastify: FastifyInstance) {
         req.body.email,
         req.body.password
       );
-      res.send();
+      res.code(201).send();
     }
   );
+
 }
 
-export default registerUser;
+export default registerRoute;

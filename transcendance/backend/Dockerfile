@@ -12,7 +12,7 @@ RUN mkdir /etc/certificates && \
     -out /etc/certificates/server.crt \
     -subj "/C=FR/ST=IDF/L=Paris/O=42"
 
-COPY package*.json ./
+COPY package.json ./
 
 RUN npm install
 

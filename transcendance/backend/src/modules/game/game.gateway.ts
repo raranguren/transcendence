@@ -5,7 +5,7 @@ import { GameManager } from './game.manager.ts';
 const gameManager = new GameManager();
 
 const gameGateway: FastifyPluginAsync = async (fastify) => {
-	fastify.get('/wss/game/:id', { websocket: true }, (connection, req) => {
+	fastify.get('/ws/game/:id', { websocket: true }, (connection, req) => {
 		const gameId = (req.params as { id: string }).id;
 		const game = gameManager.getGame(gameId);
 		
@@ -26,7 +26,7 @@ const gameGateway: FastifyPluginAsync = async (fastify) => {
 					game.movePaddle(data.playerId, data.direction);
 				}
 			} catch (e) {
-				fastify.log.error('Erreur parsing WS message:', e);
+				fastify.log.error('Erreur parsing WS message');
 			}
 		});
 		

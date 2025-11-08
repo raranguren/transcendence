@@ -50,29 +50,31 @@ backend/
 │   │   │   ├── chat.service.ts			# logique (messages, salons, modération...)
 │   │   │   └── chat.controller.ts		# endpoints HTTP (historique, création de salon...)
 │   │   │
-│   │   ├── security/                 # GDPR, suppression, anonymisation, WAF
-│   │   │   ├── gdpr.service.ts			# suppression des données, anonymisation
-│   │   │   ├── waf.middleware.ts		# Si WAF implémenté côté code : "pare-feu" applicatif (protection basique côté code)
-│   │   │   └── account-deletion.ts		# suppression compte utilisateur
+│   │   └── security/                 # GDPR, suppression, anonymisation, WAF
+│   │       ├── gdpr.service.ts			# suppression des données, anonymisation
+│   │       ├── waf.middleware.ts		# Si WAF implémenté côté code : "pare-feu" applicatif (protection basique côté code)
+│   │       └── account-deletion.ts		# suppression compte utilisateur
 │   │
 │   ├── plugins/                      # Plugins Fastify (JWT, WebSocket, CORS, etc.)
 │   │   ├── jwt.plugin.ts				# plugin JWT pour sécuriser les routes
 │   │   ├── websocket.plugin.ts			# plugin pour gérer WebSocket avec Fastify
-│   │   ├── vault.plugin.ts				# si tu utilises HashiCorp Vault ou similaire
 │   │   └── logger.plugin.ts			# logger custom (console ou fichier)
-│
+│   │
 │   ├── middlewares/                 # Middlewares personnalisés
 │   │   ├── rate-limit.middleware.ts	# limiter les requêtes (anti-spam)
 │   │   ├── csrf.middleware.ts			# protection contre les attaques CSRF
 │   │   └── auth-check.middleware.ts	# vérifie si l’utilisateur est authentifié
-│
+│   │
 │   ├── utils/                        # Fonctions utilitaires (hashing, validation, etc.)
-│   │   ├── hash.util.ts				# hash de mots de passe ou données sensibles
 │   │   └── validation.util.ts			# validateurs custom (emails, formats, etc.)
-│
-│   ├── types/                        # Déclarations de types et interfaces
-│   │   └── user.type.ts				# types User (DTO, interfaces...)
-│
+│   │
+│   ├── vault/                        # Integration et communication avec Vault
+│   │   ├── vault.client.ts				# initialise un client Vault
+│   │   ├── vault.secrets.ts			# fonctions pour get/set a secret in Vault
+│   │
+│   │
 │   └── database/                     # Accès à la DB
-│       └── index.ts					# init de la DB
+│       ├── health.ts					# Test de connection de la database
+│       ├── dac.ts						# Data Access Center (DAC): acces a la database
+│       └── init.ts						# init de la DB
 

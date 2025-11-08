@@ -1,10 +1,9 @@
 import bcrypt from "bcrypt";
-import type { User } from "../../database/dac.ts";
-import { Errors } from "../../errors.ts";
+import type { User } from "./user.entity.ts";
+import { Errors } from "../../utils/errors.utils.ts";
 import userRepository from "./user.repository.ts";
 
 function isValidEmail(email: string) {
-  if (!email || email == "") return false;
   // TODO validate email properly or activate Ajv just for this?
   //   return validator.isEmail(email);
   // or
@@ -13,7 +12,6 @@ function isValidEmail(email: string) {
 }
 
 function isValidUsername(username: string) {
-  if (!username || username == "") return false;
   // TODO validate username, starts with letter, no spaces, etc.
   // if (!username || username.length < 3 || username.length > 30) return false;
   // const regex = /^[a-zA-Z][a-zA-Z0-9_-]*$/;
@@ -22,7 +20,6 @@ function isValidUsername(username: string) {
 }
 
 function isSecurePassword(password: string) {
-  if (!password || password == "") return false;
   // TODO validate strong password
   return password.length >= 6;
 }

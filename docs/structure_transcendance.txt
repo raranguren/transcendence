@@ -7,12 +7,9 @@ transcendence/
 │   └── src/
 │
 ├── backend/                # Fastify (API + Auth + WebSocket)
-│   ├── Dockerfile			# Josh et Solenne
+│   ├── Dockerfile			# Josh et Solenne et Ricardo
 │   ├── src/
 │   └── .env
-│
-├── database/                     # SQLite monté dans backend
-│   └── data/
 │
 ├── monitoring/				# Josh
 │   ├── prometheus/
