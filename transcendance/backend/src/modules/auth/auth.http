@@ -18,3 +18,13 @@ content-type: application/json
   "username": "Moulinette",
   "password": "lol123"
 }
+
+###
+
+POST https://localhost:8080/login
+content-type: application/json
+
+{
+  "username": "moulinette@42.fr",
+  "password": "lol123"
+}

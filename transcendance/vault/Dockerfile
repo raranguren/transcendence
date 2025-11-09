@@ -1,10 +1,12 @@
-FROM hashicorp/vault:1.16
+FROM hashicorp/vault:1.21
 
-COPY init-vault.sh /init-vault.sh
+RUN apk add --no-cache openssl
 
-RUN chmod +x init-vault.sh
+COPY vault.hcl /vault/config/vault.hcl
+COPY backend.hcl /vault/policies/backend.hcl
 
-CMD vault server -dev -dev-root-token-id=root & \
-    /init-vault.sh && \
-    wait
-# CMD ["sh", "-c", "vault server -dev -dev-root-token-id=root & sleep 5 && /init-vault.sh && tail -f /dev/null"]
+COPY entrypoint.sh /entrypoint.sh
+
+RUN chmod +x /entrypoint.sh
+
+CMD ["/entrypoint.sh"]

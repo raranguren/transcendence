@@ -39,3 +39,4 @@ Add here the extensions you think are useful for this project:
 - Container Tools (to see what the Makefile does)
 - SQLite Viewer (to see the database)
 - Prettier (typescript, css and html formatter)
+- REST Client (to run http files)
